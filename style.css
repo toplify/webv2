@@ -233,14 +233,14 @@ padding: 12px 20px;
 }
 
 .dimmed {
-  filter: grayscale(80%) brightness(40%);
+  filter: grayscale(60%) brightness(40%);
   transition: filter 1s ease;
 }
 
 @media (max-width: 600px) {
-  .hero-logo { max-width: 150px; margin-top: -10%; }
-  .motto { font-size: 0.9rem; letter-spacing: 0.5px; margin-top: 40%; padding: 0 8px; }
-.menu-button { font-size: 0.8rem; margin-top: 30%;}
+  .hero-logo { max-width: 150px; margin-top: -20%; }
+  .motto { font-size: 0.9rem; letter-spacing: 0.5px; margin-top: 0%; padding: 0 8px; }
+.menu-button { font-size: 0.8rem; margin-top: -10%;}
  .dropdown {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 vedle sebe */
