@@ -82,7 +82,7 @@ body {
 .menu-container {
   position: relative;
   display: inline-block;
-  margin-top: 20px;
+  margin-top: 0px;
   opacity: 0;
 transform: translateY(20px)
   transition: opacity 1s ease, transform 1s ease;
@@ -238,9 +238,9 @@ padding: 12px 20px;
 }
 
 @media (max-width: 600px) {
-  .hero-logo { max-width: 150px; }
+  .hero-logo { max-width: 150px; margin-top: 0px }
   .motto { font-size: 0.9rem; letter-spacing: 0.5px; margin-top: 90px; padding: 0 8px; }
-.menu-button { font-size: 0.8rem; margin-top: 0px; }
+.menu-button { font-size: 0.8rem; margin-top: 0px }
  .dropdown {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 vedle sebe */
