@@ -238,9 +238,9 @@ padding: 12px 20px;
 }
 
 @media (max-width: 600px) {
-  .hero-logo { max-width: 150px; margin-top: -40px }
-  .motto { font-size: 0.9rem; letter-spacing: 0.5px; margin-top: 20px; padding: 0 8px; }
-.menu-button { font-size: 0.8rem; margin-top: 20px }
+  .hero-logo { max-width: 150px; margin-top: -10%; }
+  .motto { font-size: 0.9rem; letter-spacing: 0.5px; margin-top: 40%; padding: 0 8px; }
+.menu-button { font-size: 0.8rem; margin-top: 30%;}
  .dropdown {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 vedle sebe */
@@ -265,6 +265,6 @@ padding: 1px 0;
 
 /* Efekt ztmavení / zeslabení okolí, když je aktivní menu */
 .dimmed {
-  filter: grayscale(80%) brightness(40%);
+  filter: grayscale(60%) brightness(40%);
   transition: filter 1s ease;
 }
