@@ -284,6 +284,16 @@ min-height: 100vh;
   transform: translateY(0);
 }
 
+html, body {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth; /* aby i kliky z menu byly plynulé */
+}
+
+.hero,
+.category-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always; /* vždy se chytne nejbližší sekce */
+}
 
 @media (max-width: 600px) {
   .hero-logo { max-width: 150px; margin-top: -20%; }
