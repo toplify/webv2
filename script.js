@@ -70,43 +70,14 @@ const channels = document.querySelectorAll('.channel-card img');
 channels.forEach(img => img.classList.add("dimmed"));
 }, 9000); 
 
+// =========================
 // Smooth scroll pro menu
-document.querySelectorAll('.dropdown a').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault(); // zabrání defaultnímu chování
-    const targetId = link.getAttribute('href').substring(1);
-    const targetSection = document.getElementById(targetId);
-    if (targetSection) {
-      targetSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  });
-});
-// funkce pro kontrolu, zda je element ve viewportu
-function isInViewport(el) {
-  const rect = el.getBoundingClientRect();
-  return rect.top < window.innerHeight && rect.bottom >= 0;
-}
+// =========================
+let activeSection = null;
+let lastScrollY = window.scrollY;
+const heroSection = document.querySelector('.hero');
 
-const introImage = document.querySelector('.intro-image');
-const introText = document.querySelector('.intro-text');
-
-function showIntro() {
-  const section = document.querySelector('.hero-intro');
-  const rect = section.getBoundingClientRect();
-
-  // když sekce dosáhne vrcholu obrazovky
-  if(rect.top < window.innerHeight * 0.5 && rect.bottom > 0){
-    introImage.classList.add('show');
-
-    // text se zobrazí po 1s
-    setTimeout(() => {
-      introText.classList.add('show');
-    }, 3000);
-
-    window.removeEventListener('scroll', showIntro);
-  }
-}
-// otevření sekce po kliknutí na menu
+// Klik na položku menu -> otevře správnou sekci
 document.querySelectorAll('.dropdown a').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
@@ -115,51 +86,38 @@ document.querySelectorAll('.dropdown a').forEach(link => {
 
     if (!targetSection) return;
 
-    // 1️⃣ schovej všechny kategorie
+    // schovej všechny kategorie
     document.querySelectorAll('.category-section').forEach(sec => {
       sec.classList.remove('show');
       sec.classList.add('hidden');
     });
 
-    // 2️⃣ ukaž cílovou sekci
+    // ukaž jen tu kliknutou
     targetSection.classList.remove('hidden');
     targetSection.classList.add('show');
 
-    // 3️⃣ smooth scroll na začátek sekce
+    // nastav jako aktivní
+    activeSection = targetSection;
+
+    // smooth scroll
     targetSection.scrollIntoView({ behavior: 'smooth' });
 
-    // 4️⃣ volitelně: fade-in obrázek a text v intro
+    // volitelně animace v sekci (obrázek + text)
     const introImage = targetSection.querySelector('.intro-image');
     const introText = targetSection.querySelector('.intro-text');
 
-    if (introImage) {
-      introImage.classList.add('show');
-    }
-    if (introText) {
-      setTimeout(() => introText.classList.add('show'), 1000);
-    }
-  });
-});
-// Smooth scroll pro menu a aktivní sekce
-let activeSection = null;
-let lastScrollY = window.scrollY;
-const heroSection = document.querySelector('.hero');
-
-document.querySelectorAll('.dropdown a').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    const targetId = link.getAttribute('href').substring(1);
-    const targetSection = document.getElementById(targetId);
-    if (targetSection) {
-      activeSection = targetSection;
-      targetSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (introImage) introImage.classList.add('show');
+    if (introText) setTimeout(() => introText.classList.add('show'), 1000);
   });
 });
 
-// Scroll kontrola pro automatické přesuny
+let isAutoScrolling = false;
+
+// =========================
+// Auto-scroll logika
+// =========================
 window.addEventListener('scroll', () => {
-  if (!activeSection) return;
+  if (!activeSection || isAutoScrolling) return;
 
   const currentScrollY = window.scrollY;
   const scrollingUp = currentScrollY < lastScrollY;
@@ -168,20 +126,31 @@ window.addEventListener('scroll', () => {
 
   const activeRect = activeSection.getBoundingClientRect();
   const heroRect = heroSection.getBoundingClientRect();
-  const threshold = 20; // jemný práh
+  const threshold = 30; // tolerance
 
-  // Scroll nahoru – pokud projdeš nad aktivní sekci, vrať se k logu+mottu
+  // 🔼 Scroll nahoru → pokud jsem nad aktivní kategorií
   if (scrollingUp && activeRect.top > threshold) {
-    heroSection.scrollIntoView({ behavior: 'smooth' });
+    smoothScrollTo(heroSection);
   }
 
-  // Scroll dolů – pokud projdeš pod spodní hranici hero sekce
-  // ALE jen pokud nejsi úplně dole (ikonky/social)
-  const bottomOffset = 50; // vzdálenost od konce stránky
-  if (scrollingDown && heroRect.bottom < window.innerHeight - threshold &&
-      window.scrollY + window.innerHeight < document.body.scrollHeight - bottomOffset) {
-    activeSection.scrollIntoView({ behavior: 'smooth' });
+  // 🔽 Scroll dolů → jen pokud jsem na hero
+  if (
+    scrollingDown &&
+    heroRect.bottom < window.innerHeight - threshold &&
+    currentScrollY < heroSection.offsetHeight + 100
+  ) {
+    smoothScrollTo(activeSection);
   }
 });
 
+// Pomocná funkce s lockem
+function smoothScrollTo(element) {
+  isAutoScrolling = true;
+  element.scrollIntoView({ behavior: 'smooth' });
+
+  // odemkneme lock po 800ms (čas animace)
+  setTimeout(() => {
+    isAutoScrolling = false;
+  }, 800);
+}
 
