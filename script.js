@@ -70,3 +70,118 @@ const channels = document.querySelectorAll('.channel-card img');
 channels.forEach(img => img.classList.add("dimmed"));
 }, 9000); 
 
+// Smooth scroll pro menu
+document.querySelectorAll('.dropdown a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault(); // zabrání defaultnímu chování
+    const targetId = link.getAttribute('href').substring(1);
+    const targetSection = document.getElementById(targetId);
+    if (targetSection) {
+      targetSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+// funkce pro kontrolu, zda je element ve viewportu
+function isInViewport(el) {
+  const rect = el.getBoundingClientRect();
+  return rect.top < window.innerHeight && rect.bottom >= 0;
+}
+
+const introImage = document.querySelector('.intro-image');
+const introText = document.querySelector('.intro-text');
+
+function showIntro() {
+  const section = document.querySelector('.hero-intro');
+  const rect = section.getBoundingClientRect();
+
+  // když sekce dosáhne vrcholu obrazovky
+  if(rect.top < window.innerHeight * 0.5 && rect.bottom > 0){
+    introImage.classList.add('show');
+
+    // text se zobrazí po 1s
+    setTimeout(() => {
+      introText.classList.add('show');
+    }, 3000);
+
+    window.removeEventListener('scroll', showIntro);
+  }
+}
+// otevření sekce po kliknutí na menu
+document.querySelectorAll('.dropdown a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const targetId = link.getAttribute('href').substring(1); // např. "homepage"
+    const targetSection = document.getElementById(targetId);
+
+    if (!targetSection) return;
+
+    // 1️⃣ schovej všechny kategorie
+    document.querySelectorAll('.category-section').forEach(sec => {
+      sec.classList.remove('show');
+      sec.classList.add('hidden');
+    });
+
+    // 2️⃣ ukaž cílovou sekci
+    targetSection.classList.remove('hidden');
+    targetSection.classList.add('show');
+
+    // 3️⃣ smooth scroll na začátek sekce
+    targetSection.scrollIntoView({ behavior: 'smooth' });
+
+    // 4️⃣ volitelně: fade-in obrázek a text v intro
+    const introImage = targetSection.querySelector('.intro-image');
+    const introText = targetSection.querySelector('.intro-text');
+
+    if (introImage) {
+      introImage.classList.add('show');
+    }
+    if (introText) {
+      setTimeout(() => introText.classList.add('show'), 1000);
+    }
+  });
+});
+// Smooth scroll pro menu a aktivní sekce
+let activeSection = null;
+let lastScrollY = window.scrollY;
+const heroSection = document.querySelector('.hero');
+
+document.querySelectorAll('.dropdown a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const targetId = link.getAttribute('href').substring(1);
+    const targetSection = document.getElementById(targetId);
+    if (targetSection) {
+      activeSection = targetSection;
+      targetSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+
+// Scroll kontrola pro automatické přesuny
+window.addEventListener('scroll', () => {
+  if (!activeSection) return;
+
+  const currentScrollY = window.scrollY;
+  const scrollingUp = currentScrollY < lastScrollY;
+  const scrollingDown = currentScrollY > lastScrollY;
+  lastScrollY = currentScrollY;
+
+  const activeRect = activeSection.getBoundingClientRect();
+  const heroRect = heroSection.getBoundingClientRect();
+  const threshold = 20; // jemný práh
+
+  // Scroll nahoru – pokud projdeš nad aktivní sekci, vrať se k logu+mottu
+  if (scrollingUp && activeRect.top > threshold) {
+    heroSection.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Scroll dolů – pokud projdeš pod spodní hranici hero sekce
+  // ALE jen pokud nejsi úplně dole (ikonky/social)
+  const bottomOffset = 50; // vzdálenost od konce stránky
+  if (scrollingDown && heroRect.bottom < window.innerHeight - threshold &&
+      window.scrollY + window.innerHeight < document.body.scrollHeight - bottomOffset) {
+    activeSection.scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+

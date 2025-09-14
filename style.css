@@ -5,6 +5,7 @@ body {
   color: #fff;
   text-align: center;
   overflow-x: hidden;
+  overflow-y: auto; /* dovolí vertikální scroll */
 }
 
 .hero-container {
@@ -13,7 +14,7 @@ body {
   justify-content: center;
   gap: 30px;
   flex-wrap: nowrap;
-  height: 100vh;
+  min-height: 100vh; /* místo height */
 }
 
 .hero-logo {
@@ -236,6 +237,53 @@ padding: 12px 20px;
   filter: grayscale(60%) brightness(40%);
   transition: filter 1s ease;
 }
+
+.category-section.hidden {
+  display: none;       /* úplně skryje sekci */
+  opacity: 0;          /* pro fade-in */
+  transition: opacity 1s ease;
+}
+
+.category-section.show {
+  display: block;
+  opacity: 1;
+}
+
+.hero-intro {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* zarovnání nahoru */
+  overflow: hidden;
+}
+
+.intro-image {
+  width: 80%;
+  opacity: 0;
+  transform: translateY(50px); /* start dolů */
+  transition: opacity 3s ease, transform3s ease;
+}
+
+.intro-image.show {
+  opacity: 1;
+  transform: translateY(0); /* posun nahoru */
+}
+
+.intro-text {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 3s ease, transform 3s ease;
+  margin-top: 20px;
+min-height: 100vh;
+}
+
+.intro-text.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 
 @media (max-width: 600px) {
   .hero-logo { max-width: 150px; margin-top: -20%; }
